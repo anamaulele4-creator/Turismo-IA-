@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tourist AI — Descobre. Explora. Vive.</title>
+<meta name="description" content="Planeia viagens em Moçambique: destinos, alojamento, restaurantes, atividades, mapa e roteiros personalizados.">
+<meta name="theme-color" content="#0878d1">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><nav class="nav">
+  <div class="brand" data-page="home" style="cursor:pointer">🌴 Tourist <span>AI</span><small>DESCOBRE · EXPLORA · VIVE</small></div>
+  <div class="links">
+    <button data-page="destinos">Destinos</button><button data-page="hoteis">Alojamento</button><button data-page="restaurantes">Restaurantes</button><button data-page="atividades">Atividades</button><button data-page="transportes">Transportes</button><button data-page="mapa">Mapa</button><button data-page="assistente">Assistente</button><button data-page="roteiros">Roteiros</button><button data-page="favoritos">❤️ Favoritos</button><button data-page="parceiro">Empresas</button>
+  </div>
+  <button class="primary" id="accountBtn" data-page="conta">Entrar</button>
+</nav></header>
+
+<main class="wrap">
+
+<!-- INÍCIO -->
+<section id="home" class="page active">
+  <div class="hero"><div class="hero-inner">
+    <div class="eyebrow">A tua próxima aventura começa aqui</div>
+    <h1>Descobre o melhor de Moçambique.</h1>
+    <p>Praias, ilhas, parques e cidades. Encontra lugares, cria o teu roteiro e fala diretamente com quem te recebe.</p>
+    <div class="searchbox">
+      <input id="mainSearch" placeholder="Para onde queres ir? Ex.: Tofo, praia, marisco">
+      <select id="mainCategory"><option value="todos">Tudo</option><option value="destino">Destinos</option><option value="hotel">Alojamento</option><option value="restaurante">Restaurantes</option><option value="atividade">Atividades</option><option value="transporte">Transportes</option></select>
+      <button class="primary" id="searchBtn">Pesquisar →</button>
+    </div>
+  </div></div>
+  <div class="quick">
+    <button data-page="hoteis"><b>🏨</b>Alojamento</button><button data-page="restaurantes"><b>🍽️</b>Restaurantes</button><button data-page="transportes"><b>🚕</b>Transportes</button><button data-page="atividades"><b>🏄</b>Atividades</button><button data-page="mapa"><b>🗺️</b>Mapa</button><button data-page="assistente"><b>🤖</b>Assistente</button><button data-page="roteiros"><b>🧭</b>Roteiros</button><button data-page="info"><b>ℹ️</b>Info útil</button>
+  </div>
+  <div class="section-head"><div><h2>Destinos em destaque</h2><p>Inspiração para a tua próxima viagem</p></div><button class="secondary" data-page="destinos">Ver todos</button></div>
+  <div class="grid" id="homeDestinations"></div>
+  <div class="section-head"><div><h2>Onde ficar e comer</h2><p>Lugares conhecidos para começar. Confirma sempre preços e disponibilidade.</p></div></div>
+  <div class="grid" id="homePlaces"></div>
+  <div class="panel" style="margin-top:22px;background:linear-gradient(110deg,#eaf4ff,#fff)"><div class="row"><div><span class="tag">PARCEIROS TOURIST AI</span><h2 style="margin:10px 0 5px">Tens um negócio turístico?</h2><p class="muted">Publica o teu perfil grátis e recebe contactos de viajantes diretamente no WhatsApp.</p></div><button class="primary" data-page="parceiro">Publicar o meu negócio →</button></div></div>
+</section>
+
+<!-- RESULTADOS -->
+<section id="pesquisa" class="page">
+  <div class="section-head"><div><h2>Resultados</h2><p id="searchSummary"></p></div><button class="secondary" data-page="home">← Voltar</button></div>
+  <div class="grid" id="searchResults"></div>
+</section>
+
+<section id="destinos" class="page">
+  <div class="section-head"><div><h2>Explorar destinos</h2><p>Do sul ao norte de Moçambique.</p></div></div>
+  <div class="chips" id="destChips"></div>
+  <div class="grid" id="allDestinations"></div>
+</section>
+
+<section id="hoteis" class="page"><div class="section-head"><div><h2>Alojamento</h2><p>Hotéis, lodges e guesthouses.</p></div></div>
+  <div class="panel"><div class="formgrid"><div class="field"><label>Pesquisar</label><input class="filterInput" data-cat="hotel" placeholder="Nome ou cidade"></div><div class="field"><label>Cidade / zona</label><select class="filterPlace" data-cat="hotel"></select></div></div></div>
+  <div class="grid" id="list-hotel"></div></section>
+
+<section id="restaurantes" class="page"><div class="section-head"><div><h2>Restaurantes</h2><p>Marisco, cozinha moçambicana e mais.</p></div></div>
+  <div class="panel"><div class="formgrid"><div class="field"><label>Pesquisar</label><input class="filterInput" data-cat="restaurante" placeholder="Marisco, Maputo..."></div><div class="field"><label>Cidade / zona</label><select class="filterPlace" data-cat="restaurante"></select></div></div></div>
+  <div class="grid" id="list-restaurante"></div></section>
+
+<section id="atividades" class="page"><div class="section-head"><div><h2>Atividades e passeios</h2><p>Mergulho, safaris, ilhas e cultura.</p></div></div>
+  <div class="panel"><div class="formgrid"><div class="field"><label>Pesquisar</label><input class="filterInput" data-cat="atividade" placeholder="Mergulho, safari..."></div><div class="field"><label>Cidade / zona</label><select class="filterPlace" data-cat="atividade"></select></div></div></div>
+  <div class="grid" id="list-atividade"></div></section>
+
+<section id="transportes" class="page"><div class="section-head"><div><h2>Transportes e transferes</h2><p>Prepara o teu pedido e envia-o pelo WhatsApp ao motorista ou empresa que escolheres.</p></div></div>
+  <div class="grid" id="list-transporte"></div>
+  <div class="panel"><h3>Pedir orçamento de transporte</h3>
+    <form id="transportForm" class="formgrid">
+      <div class="field"><label>Partida</label><input name="from" required placeholder="Aeroporto Internacional de Maputo"></div>
+      <div class="field"><label>Destino</label><input name="to" required placeholder="Hotel ou endereço"></div>
+      <div class="field"><label>Data e hora</label><input name="when" type="datetime-local" required></div>
+      <div class="field"><label>Passageiros</label><input name="pax" type="number" min="1" value="1" required></div>
+      <div class="field"><label>WhatsApp do prestador (opcional)</label><input name="phone" placeholder="+258 84 000 0000"></div>
+      <div class="field"><label>Notas</label><input name="notes" placeholder="Bagagem, cadeira de criança..."></div>
+      <button class="primary">Enviar pedido pelo WhatsApp</button>
+    </form></div>
+</section>
+
+<section id="mapa" class="page"><div class="section-head"><div><h2>Mapa turístico</h2><p>Toca num marcador para ver detalhes.</p></div><button class="secondary" id="locateBtn">📍 Onde estou</button></div>
+  <div class="chips" id="mapChips"></div>
+  <div class="panel" style="padding:10px"><div id="map"></div></div>
+  <p class="muted small">Mapa © colaboradores do OpenStreetMap. Posições aproximadas — usa “Como chegar” para navegar.</p>
+</section>
+
+<section id="assistente" class="page"><div class="section-head"><div><h2>O teu assistente de viagem</h2><p>Diz-me destino, dias e orçamento e eu monto o plano.</p></div><button class="secondary" id="clearChat">Limpar conversa</button></div>
+  <div class="panel">
+    <div class="chips" id="chatSuggestions"></div>
+    <div class="chatbox" id="chatbox"></div>
+    <form class="chatrow" id="chatForm"><input id="chatInput" placeholder="Ex.: 4 dias no Tofo com 15000 MT, praia" autocomplete="off" required><button class="primary">Enviar</button></form>
+    <p class="muted small" style="margin-top:10px">O assistente funciona no teu telemóvel, mesmo offline. Preços são estimativas — confirma com os fornecedores.</p>
+  </div>
+</section>
+
+<section id="roteiros" class="page"><div class="section-head"><div><h2>Criar roteiro personalizado</h2><p>Plano dia a dia com orçamento estimado.</p></div></div>
+  <div class="panel no-print"><form id="itineraryForm" class="formgrid">
+    <div class="field"><label>Destino</label><select id="tripDestination"></select></div>
+    <div class="field"><label>Duração (dias)</label><input id="tripDays" type="number" min="1" max="21" value="3" required></div>
+    <div class="field"><label>Orçamento total por pessoa (MT)</label><input id="tripBudget" type="number" min="0" step="500" value="15000" required></div>
+    <div class="field"><label>Estilo</label><select id="tripStyle"><option>Praia e cultura</option><option>Família</option><option>Aventura</option><option>Económica</option><option>Romântica</option><option>Natureza e safari</option></select></div>
+    <button class="primary">Gerar roteiro</button>
+  </form></div>
+  <div id="itineraryResult"></div>
+  <div class="panel no-print"><h3>Os meus roteiros</h3><div class="list" id="savedTrips"></div></div>
+</section>
+
+<section id="favoritos" class="page"><div class="section-head"><div><h2>❤️ Favoritos</h2><p>Os lugares que guardaste.</p></div></div><div class="grid" id="favList"></div></section>
+
+<section id="info" class="page"><div class="section-head"><div><h2>Informações úteis</h2><p>O essencial antes de viajar por Moçambique.</p></div></div>
+  <div class="panel"><div class="info">
+    <div><b>💰 Moeda</b>Metical (MZN / MT). Leva algum dinheiro vivo para mercados e zonas rurais.</div>
+    <div><b>🗣️ Línguas</b>Português (oficial), mais línguas locais como changana, macua e sena. Inglês nas zonas turísticas.</div>
+    <div><b>🚗 Condução</b>Pela esquerda. Para zonas como Ponta do Ouro ou Gorongosa, um 4x4 ajuda muito.</div>
+    <div><b>🔌 Eletricidade</b>220 V. Tomadas tipo C, F e M — leva um adaptador.</div>
+    <div><b>☀️ Melhor época</b>Maio a novembro: estação seca e mais fresca. Dezembro a março é quente, húmido e com chuvas.</div>
+    <div><b>🦟 Saúde</b>Há risco de malária. Fala com um médico antes da viagem e usa repelente e rede.</div>
+  </div></div>
+  <div class="panel"><h3>Câmbio rápido (estimativa)</h3>
+    <div class="formgrid"><div class="field"><label>Valor</label><input id="fxAmount" type="number" value="100"></div><div class="field"><label>Moeda</label><select id="fxCur"><option value="USD">USD → MT</option><option value="EUR">EUR → MT</option><option value="ZAR">ZAR → MT</option></select></div></div>
+    <p id="fxResult" style="font-size:20px;font-weight:800;color:var(--navy)"></p>
+    <p class="muted small" id="fxNote"></p></div>
+</section>
+
+<section id="parceiro" class="page"><div class="section-head"><div><h2>Tourist AI para empresas</h2><p>Publica o teu negócio e recebe contactos diretos de viajantes.</p></div></div>
+  <div class="grid">
+    <article class="card"><div class="cardbody"><span class="tag">GRÁTIS</span><h3>Perfil Básico</h3><p class="muted">Perfil, fotografia, contactos e botão de WhatsApp.</p><div class="price">0 MT</div></div></article>
+    <article class="card"><div class="cardbody"><span class="tag">EM BREVE</span><h3>Empresa Premium</h3><p class="muted">Destaque nas pesquisas e estatísticas avançadas.</p><div class="price">1.000 MT <span class="muted">/ mês</span></div></div></article>
+    <article class="card"><div class="cardbody"><span class="tag">EM BREVE</span><h3>Guia turístico Pro</h3><p class="muted">Calendário de passeios e pedidos de reserva.</p><div class="price">300 MT <span class="muted">/ mês</span></div></div></article>
+  </div>
+  <div class="panel"><h3 id="bizFormTitle">Publicar o meu negócio</h3>
+    <form id="businessForm" class="formgrid">
+      <input type="hidden" name="id">
+      <div class="field"><label>Nome comercial *</label><input name="name" required></div>
+      <div class="field"><label>Categoria *</label><select name="category"><option value="hotel">Alojamento</option><option value="restaurante">Restaurante</option><option value="atividade">Atividade / guia</option><option value="transporte">Transporte</option></select></div>
+      <div class="field"><label>Cidade / zona *</label><select name="place" id="bizPlace"></select></div>
+      <div class="field"><label>WhatsApp *</label><input name="phone" required placeholder="+258 84 000 0000"></div>
+      <div class="field"><label>Preço indicativo</label><input name="price" placeholder="Desde 2.500 MT / noite"></div>
+      <div class="field"><label>Link da fotografia (opcional)</label><input name="img" type="url" placeholder="https://..."></div>
+      <div class="field" style="grid-column:1/-1"><label>Descrição *</label><textarea name="desc" required maxlength="400"></textarea></div>
+      <div class="row"><button class="primary">Publicar</button><button type="button" class="secondary hidden" id="cancelEdit">Cancelar edição</button></div>
+    </form></div>
+  <div class="panel"><h3>O meu painel</h3>
+    <div class="stats"><div class="stat"><strong id="pListings">0</strong><span>Negócios publicados</span></div><div class="stat"><strong id="pViews">0</strong><span>Visualizações</span></div><div class="stat"><strong id="pLeads">0</strong><span>Contactos WhatsApp</span></div><div class="stat"><strong id="pFavs">0</strong><span>Guardados</span></div></div>
+    <div class="list" id="myListings" style="margin-top:15px"></div>
+    <p class="muted small">Os dados ficam guardados neste dispositivo.</p></div>
+</section>
+
+<section id="conta" class="page"><div class="section-head"><div><h2>A minha conta</h2><p>O teu perfil fica guardado neste dispositivo.</p></div></div>
+  <div class="panel" id="accountPanel"></div>
+  <div class="panel"><h3>Os meus dados</h3><p class="muted">Faz uma cópia de segurança dos teus favoritos, roteiros e negócios, ou passa-os para outro telemóvel.</p>
+    <div class="actions"><button class="secondary" id="exportBtn">⬇️ Exportar dados</button><label class="secondary" style="cursor:pointer">⬆️ Importar<input type="file" id="importFile" accept="application/json" hidden></label><button class="danger" id="wipeBtn">Apagar tudo</button></div></div>
+</section>
+
+</main>
+
+<footer class="footer"><strong>🌴 Tourist AI</strong><p>Turismo inteligente, Moçambique primeiro.</p><p class="small">Informação indicativa: confirma preços, horários e disponibilidade diretamente com cada fornecedor.</p><p class="small"><a href="#info" style="color:#dbe8f5">Informações úteis</a> · <a href="#parceiro" style="color:#dbe8f5">Para empresas</a></p></footer>
+
+<nav class="bottomnav">
+  <button data-page="home"><b>🏠</b>Início</button><button data-page="destinos"><b>🌍</b>Destinos</button><button data-page="mapa"><b>🗺️</b>Mapa</button><button data-page="assistente"><b>🤖</b>Assistente</button><button data-page="roteiros"><b>🧭</b>Roteiros</button>
+</nav>
+
+<div class="modal" id="modal"><div class="modalbox" id="modalbox"></div></div>
+<div id="toast" class="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
