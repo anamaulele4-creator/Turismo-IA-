@@ -4,7 +4,10 @@ const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAl
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = n => Math.round(n).toLocaleString('pt-PT');
 const CAT = { destino:'Destino', hotel:'Alojamento', restaurante:'Restaurante', atividade:'Atividade', transporte:'Transporte' };
-const CAT_ICON = { destino:'🌍', hotel:'🏨', restaurante:'🍽️', atividade:'🏄', transporte:'🚕' };
+const CAT_ICON = { destino:'globe', hotel:'bed', restaurante:'food', atividade:'wave', transporte:'car' };
+const CAT_COLOR = { destino:'#12345a', hotel:'#15966a', restaurante:'#ff9f43', atividade:'#0878d1', transporte:'#8e44ad' };
+const ico = (n, cls) => `<svg class="ic${cls ? ' ' + cls : ''}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const heart = on => ico('heart', on ? 'on' : '');
 const destName = id => (DESTINATIONS.find(d => d.id === id) || {}).name || id;
 
 /* ---------- Armazenamento ---------- */
@@ -33,11 +36,11 @@ const findItem = id => allItems().find(x => x.id === id);
 /* ---------- Cartões ---------- */
 function card(x) {
   const fav = db.favs().includes(x.id);
-  const tag = x.category === 'destino' ? x.type : `${CAT_ICON[x.category]} ${destName(x.place)}`;
+  const tag = x.category === 'destino' ? x.type : `${CAT[x.category]} · ${destName(x.place)}`;
   const img = x.img || IMG.guide;
   return `<article class="card">
     ${x.partner ? '<span class="badge">Parceiro</span>' : ''}
-    <button class="fav" data-fav="${esc(x.id)}" aria-label="Favorito">${fav ? '❤️' : '🤍'}</button>
+    <button class="fav" data-fav="${esc(x.id)}" aria-label="Favorito">${heart(fav)}</button>
     <img src="${esc(img)}" alt="${esc(x.name)}" loading="lazy" onerror="this.src='${IMG.guide}'">
     <div class="cardbody"><span class="tag">${esc(tag)}</span><h3>${esc(x.name)}</h3><p class="muted">${esc(x.desc)}</p>
     <div class="row"><span class="price">${esc(x.price || (x.category === 'destino' ? x.region : ''))}</span><button class="secondary" data-open="${esc(x.id)}">Ver detalhes</button></div></div></article>`;
@@ -106,13 +109,13 @@ $('#mainSearch').addEventListener('keydown', e => { if (e.key === 'Enter') searc
 function toggleFav(id) {
   let f = db.favs(); const on = f.includes(id);
   f = on ? f.filter(x => x !== id) : [...f, id]; store.set('favs', f);
-  toast(on ? 'Removido dos favoritos' : 'Guardado nos favoritos ❤️');
+  toast(on ? 'Removido dos favoritos' : 'Guardado nos favoritos');
   renderLists(); if ($('#favoritos').classList.contains('active')) renderFavs();
-  $$(`[data-fav="${CSS.escape(id)}"]`).forEach(b => b.textContent = b.classList.contains('fav') ? (on ? '🤍' : '❤️') : (on ? '🤍 Favorito' : '❤️ Favorito'));
+  $$(`[data-fav="${CSS.escape(id)}"]`).forEach(b => b.innerHTML = heart(!on) + (b.classList.contains('fav') ? '' : (on ? ' Guardar' : ' Guardado')));
 }
 function renderFavs() {
   const items = db.favs().map(findItem).filter(Boolean);
-  $('#favList').innerHTML = items.length ? items.map(card).join('') : empty('Ainda não guardaste nada. Toca em 🤍 num cartão para o guardar aqui.');
+  $('#favList').innerHTML = items.length ? items.map(card).join('') : empty('Ainda não guardaste nada. Toca no coração de um cartão para o guardar aqui.');
 }
 
 /* ---------- Detalhe ---------- */
@@ -126,19 +129,19 @@ function openDetail(id) {
   const x = findItem(id); if (!x) return;
   if (x.partner) bump(x.id, 'views');
   const near = x.category === 'destino' ? allItems().filter(p => p.place === x.id && p.category !== 'destino') : [];
-  let html = `<img src="${esc(x.img || IMG.guide)}" alt="" onerror="this.src='${IMG.guide}'"><div class="modalbody"><button class="close" aria-label="Fechar">✕</button>
-    <span class="tag">${CAT_ICON[x.category]} ${esc(CAT[x.category])}${x.category !== 'destino' ? ' · ' + esc(destName(x.place)) : ' · ' + esc(x.region)}</span>
+  let html = `<img src="${esc(x.img || IMG.guide)}" alt="" onerror="this.src='${IMG.guide}'"><div class="modalbody"><button class="close" aria-label="Fechar">${ico('close')}</button>
+    <span class="tag">${ico(CAT_ICON[x.category])} ${esc(CAT[x.category])}${x.category !== 'destino' ? ' · ' + esc(destName(x.place)) : ' · ' + esc(x.region)}</span>
     <h2 style="margin:10px 0 6px">${esc(x.name)}</h2><p>${esc(x.desc)}</p>`;
   if (x.price) html += `<p><b>Preço:</b> ${esc(x.price)}</p>`;
   if (x.season) html += `<p><b>Melhor época:</b> ${esc(x.season)}</p>`;
   if (x.activities) html += `<p><b>O que fazer:</b></p><ul>${x.activities.slice(0, 6).map(a => `<li>${esc(a)}</li>`).join('')}</ul>`;
   if (near.length) html += `<p><b>Aqui perto:</b> ${near.map(n => `<a href="#" data-open="${esc(n.id)}">${esc(n.name)}</a>`).join(' · ')}</p>`;
   html += `<div class="actions">`;
-  if (x.phone) html += `<a class="wa" target="_blank" rel="noopener" data-lead="${esc(x.id)}" href="https://wa.me/${waNumber(x.phone)}?text=${encodeURIComponent(`Olá! Vi o ${x.name} no Tourist AI e gostaria de mais informações.`)}">💬 WhatsApp</a>`;
-  html += `<a class="secondary" target="_blank" rel="noopener" href="${mapsLink(x)}">🔎 Ver no Google Maps</a>`;
-  if (x.lat) html += `<a class="secondary" target="_blank" rel="noopener" href="${directionsLink(x)}">🧭 Como chegar</a>`;
+  if (x.phone) html += `<a class="wa" target="_blank" rel="noopener" data-lead="${esc(x.id)}" href="https://wa.me/${waNumber(x.phone)}?text=${encodeURIComponent(`Olá! Vi o ${x.name} no Tourist AI e gostaria de mais informações.`)}">${ico('phone')} WhatsApp</a>`;
+  html += `<a class="secondary" target="_blank" rel="noopener" href="${mapsLink(x)}">${ico('search')} Ver no Google Maps</a>`;
+  if (x.lat) html += `<a class="secondary" target="_blank" rel="noopener" href="${directionsLink(x)}">${ico('route')} Como chegar</a>`;
   if (x.category === 'destino') html += `<button class="primary" data-plan="${esc(x.id)}">Criar roteiro aqui</button>`;
-  html += `<button class="secondary" data-fav="${esc(x.id)}">${db.favs().includes(x.id) ? '❤️' : '🤍'} Favorito</button><button class="secondary" data-share="${esc(x.id)}">↗ Partilhar</button></div>`;
+  html += `<button class="secondary" data-fav="${esc(x.id)}">${heart(db.favs().includes(x.id))} ${db.favs().includes(x.id) ? 'Guardado' : 'Guardar'}</button><button class="secondary" data-share="${esc(x.id)}">${ico('share')} Partilhar</button></div>`;
   if (!x.partner && x.category !== 'destino') html += `<p class="muted small" style="margin-top:12px">Informação indicativa. Confirma preços e horários com o estabelecimento.</p>`;
   html += `</div>`;
   $('#modalbox').innerHTML = html; $('#modal').classList.add('open');
@@ -162,7 +165,7 @@ function initMap() {
   if (!map) {
     map = L.map('map', { scrollWheelZoom:false }).setView([-19.5, 35.0], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:18, attribution:'© OpenStreetMap' }).addTo(map);
-    $('#mapChips').innerHTML = ['todos', ...Object.keys(CAT)].map(c => `<button class="chip ${c === mapCat ? 'on' : ''}" data-mapcat="${c}">${c === 'todos' ? 'Tudo' : CAT_ICON[c] + ' ' + CAT[c]}</button>`).join('');
+    $('#mapChips').innerHTML = ['todos', ...Object.keys(CAT)].map(c => `<button class="chip ${c === mapCat ? 'on' : ''}" data-mapcat="${c}">${c === 'todos' ? 'Tudo' : ico(CAT_ICON[c]) + ' ' + CAT[c]}</button>`).join('');
     $('#mapChips').onclick = e => { const c = e.target.closest('[data-mapcat]'); if (!c) return; mapCat = c.dataset.mapcat; $$('#mapChips .chip').forEach(b => b.classList.toggle('on', b === c)); drawMarkers(); };
   }
   drawMarkers(); setTimeout(() => map.invalidateSize(), 150);
@@ -171,7 +174,7 @@ function drawMarkers() {
   if (layers.g) layers.g.remove();
   layers.g = L.layerGroup().addTo(map);
   allItems().filter(x => x.lat && (mapCat === 'todos' || x.category === mapCat)).forEach(x => {
-    const icon = L.divIcon({ className:'', html:`<div style="font-size:24px;filter:drop-shadow(0 2px 2px #0005)">${CAT_ICON[x.category]}</div>`, iconSize:[28,28], iconAnchor:[14,14] });
+    const icon = L.divIcon({ className:'', html:`<div class="mpin" style="background:${CAT_COLOR[x.category]}">${ico(CAT_ICON[x.category])}</div>`, iconSize:[30,30], iconAnchor:[15,15] });
     L.marker([x.lat, x.lng], { icon }).addTo(layers.g).bindPopup(`<b>${esc(x.name)}</b><br>${esc(CAT[x.category])}<br><a href="#" data-open="${esc(x.id)}">Ver detalhes</a>`);
   });
 }
@@ -221,10 +224,10 @@ function itineraryHTML(t, saved) {
     <p class="muted">Estilo: ${esc(t.style)} · Orçamento: ${fmt(t.budget)} MT · ${fmt(t.daily)} MT/dia · Melhor época: ${esc(t.season)}</p>${warn}
     <div class="budgetbar">${parts.map(([k, v], i) => `<span style="width:${(v / t.budget * 100) || 0}%;background:${colors[i]}" title="${k}"></span>`).join('')}</div>
     <p class="small">${parts.map(([k, v], i) => `<span style="color:${colors[i]}">●</span> ${k}: ${fmt(v)} MT`).join(' &nbsp; ')}</p>
-    <div class="list">${t.plan.map(p => `<div class="listitem"><div><strong>Dia ${p.day}</strong><div class="muted">🌅 ${esc(p.morning)}<br>☀️ ${esc(p.afternoon)}<br>🌙 ${esc(p.evening)}</div></div></div>`).join('')}</div>
+    <div class="list">${t.plan.map(p => `<div class="listitem"><div><strong>Dia ${p.day}</strong><div class="muted"><b>Manhã:</b> ${esc(p.morning)}<br><b>Tarde:</b> ${esc(p.afternoon)}<br><b>Noite:</b> ${esc(p.evening)}</div></div></div>`).join('')}</div>
     ${t.tip ? `<p><b>Dica:</b> ${esc(t.tip)}</p>` : ''}
     <p class="muted small">Custos são estimativas por pessoa, sem voos. Confirma preços e horários antes de reservar.</p>
-    <div class="actions no-print">${saved ? '' : `<button class="primary" data-savetrip="${t.id}">💾 Guardar</button>`}<button class="secondary" data-sharetrip="${t.id}">↗ Partilhar</button><button class="wa" data-watrip="${t.id}">💬 WhatsApp</button><button class="secondary" onclick="window.print()">🖨️ Imprimir / PDF</button></div></div>`;
+    <div class="actions no-print">${saved ? '' : `<button class="primary" data-savetrip="${t.id}">${ico('save')} Guardar</button>`}<button class="secondary" data-sharetrip="${t.id}">${ico('share')} Partilhar</button><button class="wa" data-watrip="${t.id}">${ico('phone')} WhatsApp</button><button class="secondary" onclick="window.print()">${ico('print')} Imprimir / PDF</button></div></div>`;
 }
 let lastTrip = null;
 $('#tripDestination').innerHTML = placeOptions(false);
@@ -234,10 +237,10 @@ $('#itineraryForm').onsubmit = e => {
   $('#itineraryResult').innerHTML = itineraryHTML(lastTrip, false);
   $('#itineraryResult').scrollIntoView({ behavior:'smooth' });
 };
-function tripText(t) { return `🌴 Roteiro Tourist AI — ${t.destName}, ${t.days} dia(s)\nOrçamento: ${fmt(t.budget)} MT\n\n` + t.plan.map(p => `Dia ${p.day}\n• ${p.morning}\n• ${p.afternoon}\n• ${p.evening}`).join('\n\n'); }
+function tripText(t) { return `Roteiro Tourist AI — ${t.destName}, ${t.days} dia(s)\nOrçamento: ${fmt(t.budget)} MT\n\n` + t.plan.map(p => `Dia ${p.day}\n• ${p.morning}\n• ${p.afternoon}\n• ${p.evening}`).join('\n\n'); }
 function getTrip(id) { return db.trips().find(t => t.id === id) || store.get('gen', []).find(t => t.id === id); }
 document.addEventListener('click', e => {
-  const s = e.target.closest('[data-savetrip]'); if (s) { const t = getTrip(s.dataset.savetrip); if (!t) return toast('Este roteiro já não está disponível. Gera um novo.'); store.set('trips', [t, ...db.trips().filter(x => x.id !== t.id)]); s.remove(); renderTrips(); toast('Roteiro guardado ✅'); }
+  const s = e.target.closest('[data-savetrip]'); if (s) { const t = getTrip(s.dataset.savetrip); if (!t) return toast('Este roteiro já não está disponível. Gera um novo.'); store.set('trips', [t, ...db.trips().filter(x => x.id !== t.id)]); s.remove(); renderTrips(); toast('Roteiro guardado'); }
   const sh = e.target.closest('[data-sharetrip]'); if (sh) { const t = getTrip(sh.dataset.sharetrip); if (!t) return; share('Roteiro ' + t.destName, tripText(t)); }
   const w = e.target.closest('[data-watrip]'); if (w && getTrip(w.dataset.watrip)) window.open('https://wa.me/?text=' + encodeURIComponent(tripText(getTrip(w.dataset.watrip))), '_blank');
   const v = e.target.closest('[data-viewtrip]'); if (v) { const t = getTrip(v.dataset.viewtrip); $('#itineraryResult').innerHTML = itineraryHTML(t, true); $('#itineraryResult').scrollIntoView({ behavior:'smooth' }); }
@@ -274,7 +277,7 @@ function reply(msg) {
     lastTrip = buildItinerary(dest.id, days, budget, style);
     return `Aqui está um plano para <b>${esc(dest.name)}</b>, ${days} dia(s), ${fmt(budget)} MT (${esc(style.toLowerCase())}):<br><br>` +
       lastTrip.plan.map(p => `<b>Dia ${p.day}:</b> ${esc(p.morning)} · ${esc(p.afternoon)} · ${esc(p.evening)}`).join('<br>') +
-      `<br><br>Nível estimado: <b>${esc(lastTrip.tier)}</b> (~${fmt(lastTrip.daily)} MT/dia).${lastTrip.daily < lastTrip.need * .75 ? ' ⚠️ O orçamento está apertado para este destino.' : ''}<br><br><button class="primary" data-savetrip="${lastTrip.id}">💾 Guardar roteiro</button> <button class="wa" data-watrip="${lastTrip.id}">💬 Enviar</button>`;
+      `<br><br>Nível estimado: <b>${esc(lastTrip.tier)}</b> (~${fmt(lastTrip.daily)} MT/dia).${lastTrip.daily < lastTrip.need * .75 ? ' Atenção: o orçamento está apertado para este destino.' : ''}<br><br><button class="primary" data-savetrip="${lastTrip.id}">${ico('save')} Guardar roteiro</button> <button class="wa" data-watrip="${lastTrip.id}">${ico('phone')} Enviar</button>`;
   }
   if (/tubarao|tubaroes|baleia|jamanta|manta/.test(m)) return `O melhor sítio é o <b>Tofo</b>, em Inhambane — tubarões-baleia todo o ano, com mais avistamentos de outubro a março, e jamantas no Manta Reef. <a href="#" data-open="tofo">Ver Tofo</a> · <a href="#" data-open="tofoscuba">Tofo Scuba</a>`;
   if (/golfinh/.test(m)) return `Vai à <b>Ponta do Ouro</b>, no extremo sul: há encontros responsáveis com golfinhos-roazes. <a href="#" data-open="dolphin">Dolphin Encounters</a>`;
@@ -289,12 +292,12 @@ function reply(msg) {
   if (/malaria|vacina|saude|mosquito/.test(m)) return `Há risco de malária em todo o país. Fala com um médico antes de viajar, usa repelente e dorme com rede.`;
   if (/transporte|chegar|voo|aviao|chapa|taxi/.test(m)) return `Entre cidades distantes, o mais prático é voar com a <b>LAM</b>. Para Ponta do Ouro ou Gorongosa, um 4x4 ajuda. Dentro das cidades, táxis (combina o preço antes) ou chapas. <a href="#transportes">Transportes</a>`;
   if (dest) return `<b>${esc(dest.name)}</b>: ${esc(dest.desc)}<br>Melhor época: ${esc(dest.season)}.<br>Diz-me quantos dias e o orçamento e eu faço o roteiro. Ex.: “${dest.days || 3} dias em ${esc(dest.name)} com 12000 MT”.`;
-  if (/^(ola|oi|bom dia|boa tarde|boa noite|hello|hi)\b/.test(m)) return `Olá! 🌴 Para onde queres ir? Diz-me o destino, os dias e o orçamento — por exemplo, “4 dias no Tofo com 15000 MT”.`;
+  if (/^(ola|oi|bom dia|boa tarde|boa noite|hello|hi)\b/.test(m)) return `Olá! Para onde queres ir? Diz-me o destino, os dias e o orçamento — por exemplo, “4 dias no Tofo com 15000 MT”.`;
   return `Posso ajudar com roteiros, praias, safaris, mergulho, comida, época ideal e câmbio. Experimenta: “5 dias em Vilankulo com 20000 MT” ou “onde ver golfinhos?”.`;
 }
 function renderChat() {
   let h = db.chat();
-  if (!h.length) h = [{ r:'bot', t:'Olá! 🌴 Sou o Tourist AI. Diz-me o destino, quantos dias tens e o teu orçamento, e monto-te um roteiro.' }];
+  if (!h.length) h = [{ r:'bot', t:'Olá! Sou o Tourist AI. Diz-me o destino, quantos dias tens e o teu orçamento, e monto-te um roteiro.' }];
   $('#chatbox').innerHTML = h.map(x => `<div class="bubble ${x.r === 'user' ? 'user' : ''}">${x.r === 'user' ? esc(x.t) : x.t}</div>`).join('');
   $('#chatbox').scrollTop = 1e9;
   $('#chatSuggestions').innerHTML = SUGGESTIONS.map(s => `<button class="chip" data-suggest="${esc(s)}">${esc(s)}</button>`).join('');
@@ -311,7 +314,7 @@ $('#clearChat').onclick = () => { store.set('chat', []); renderChat(); };
 $('#transportForm').onsubmit = e => {
   e.preventDefault(); const f = Object.fromEntries(new FormData(e.target));
   const when = f.when ? new Date(f.when).toLocaleString('pt-PT', { dateStyle:'short', timeStyle:'short' }) : '';
-  const txt = `Olá! Pedido de transporte (via Tourist AI):\n📍 De: ${f.from}\n🏁 Para: ${f.to}\n🗓️ ${when}\n👥 Passageiros: ${f.pax}${f.notes ? '\n📝 ' + f.notes : ''}\nQual seria o preço?`;
+  const txt = `Olá! Pedido de transporte (via Tourist AI):\nDe: ${f.from}\nPara: ${f.to}\nData: ${when}\nPassageiros: ${f.pax}${f.notes ? '\nNotas: ' + f.notes : ''}\nQual seria o preço?`;
   window.open(`https://wa.me/${waNumber(f.phone)}?text=${encodeURIComponent(txt)}`, '_blank');
 };
 
@@ -323,8 +326,8 @@ $('#businessForm').onsubmit = e => {
   const d = DESTINATIONS.find(x => x.id === f.place);
   const jitter = () => (Math.random() - .5) * 0.01;
   const list = db.biz(); const user = db.user();
-  if (f.id) { const i = list.findIndex(x => x.id === f.id); if (i > -1) list[i] = { ...list[i], ...f }; toast('Negócio atualizado ✅'); }
-  else { list.unshift({ ...f, id:'b' + Date.now(), lat:d.lat + jitter(), lng:d.lng + jitter(), owner:user ? user.email : '', created:new Date().toISOString() }); toast('Publicado! Já aparece nas pesquisas e no mapa 🎉'); }
+  if (f.id) { const i = list.findIndex(x => x.id === f.id); if (i > -1) list[i] = { ...list[i], ...f }; toast('Negócio atualizado'); }
+  else { list.unshift({ ...f, id:'b' + Date.now(), lat:d.lat + jitter(), lng:d.lng + jitter(), owner:user ? user.email : '', created:new Date().toISOString() }); toast('Publicado! Já aparece nas pesquisas e no mapa'); }
   store.set('biz', list); resetBizForm(); renderLists(); renderPartner(); if (map) drawMarkers();
 };
 function resetBizForm() { const f = $('#businessForm'); f.reset(); f.elements.id.value = ''; $('#bizFormTitle').textContent = 'Publicar o meu negócio'; $('#cancelEdit').classList.add('hidden'); }
@@ -348,21 +351,21 @@ $('#myListings').addEventListener('click', e => {
 /* ---------- Conta ---------- */
 function renderAccount() {
   const u = db.user();
-  $('#accountPanel').innerHTML = u ? `<h3>Olá, ${esc(u.name)} 👋</h3><p class="muted">${esc(u.email)} · ${esc(u.type)}</p>
+  $('#accountPanel').innerHTML = u ? `<h3>Olá, ${esc(u.name)}</h3><p class="muted">${esc(u.email)} · ${esc(u.type)}</p>
     <div class="stats"><div class="stat"><strong>${db.favs().length}</strong><span>Favoritos</span></div><div class="stat"><strong>${db.trips().length}</strong><span>Roteiros</span></div><div class="stat"><strong>${db.biz().length}</strong><span>Negócios</span></div><div class="stat"><strong>${new Date(u.since).toLocaleDateString('pt-PT')}</strong><span>Membro desde</span></div></div>
-    <div class="actions"><button class="secondary" data-page="favoritos">❤️ Favoritos</button><button class="secondary" data-page="roteiros">🧭 Roteiros</button><button class="danger" id="logoutBtn">Sair</button></div>`
+    <div class="actions"><button class="secondary" data-page="favoritos">${heart(true)} Favoritos</button><button class="secondary" data-page="roteiros">${ico('compass')} Roteiros</button><button class="danger" id="logoutBtn">Sair</button></div>`
   : `<form id="accountForm" class="formgrid"><div class="field"><label>Nome</label><input name="name" required placeholder="O teu nome"></div><div class="field"><label>Email</label><input name="email" type="email" required placeholder="tu@email.com"></div><div class="field"><label>Tipo de conta</label><select name="type"><option>Turista</option><option>Empresa parceira</option></select></div><button class="primary">Criar perfil</button></form>`;
   const af = $('#accountForm'); if (af) af.onsubmit = e => { e.preventDefault(); const f = Object.fromEntries(new FormData(af)); store.set('user', { ...f, since:new Date().toISOString() }); updateAccountBtn(); renderAccount(); toast('Bem-vindo(a), ' + f.name + '!'); if (f.type === 'Empresa parceira') go('parceiro'); };
   const lo = $('#logoutBtn'); if (lo) lo.onclick = () => { store.set('user', null); updateAccountBtn(); renderAccount(); };
 }
-function updateAccountBtn() { const u = db.user(); $('#accountBtn').textContent = u ? '👤 ' + u.name.split(' ')[0] : 'Entrar'; }
+function updateAccountBtn() { const u = db.user(); $('#accountBtn').innerHTML = u ? ico('user') + ' ' + esc(u.name.split(' ')[0]) : 'Entrar'; }
 $('#exportBtn').onclick = () => {
   const data = {}; Object.keys(localStorage).filter(k => k.startsWith('tai_') && k !== 'tai_gen').forEach(k => data[k] = localStorage.getItem(k));
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 1)], { type:'application/json' }));
   a.download = 'tourist-ai-dados.json'; a.click();
 };
 $('#importFile').onchange = async e => {
-  try { const data = JSON.parse(await e.target.files[0].text()); Object.entries(data).forEach(([k, v]) => k.startsWith('tai_') && localStorage.setItem(k, v)); toast('Dados importados ✅'); boot(); } catch { toast('Ficheiro inválido.'); }
+  try { const data = JSON.parse(await e.target.files[0].text()); Object.entries(data).forEach(([k, v]) => k.startsWith('tai_') && localStorage.setItem(k, v)); toast('Dados importados'); boot(); } catch { toast('Ficheiro inválido.'); }
 };
 $('#wipeBtn').onclick = () => { if (confirm('Apagar todos os teus dados deste dispositivo?')) { Object.keys(localStorage).filter(k => k.startsWith('tai_')).forEach(k => localStorage.removeItem(k)); boot(); toast('Dados apagados.'); } };
 
