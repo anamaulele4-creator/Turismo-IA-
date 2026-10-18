@@ -17,3 +17,13 @@
 .budgetbar{display:flex;height:14px;border-radius:99px;overflow:hidden;margin:10px 0}.budgetbar span{display:block}
 @media(max-width:850px){.bottomnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:6;padding:6px 0 calc(6px + env(safe-area-inset-bottom))}.bottomnav button{background:none;font-size:11px;color:var(--muted);font-weight:700}.bottomnav b{display:block;font-size:20px}body{padding-bottom:70px}.info{grid-template-columns:1fr 1fr}#map{height:380px}}
 @media print{.top,.bottomnav,.footer,button,.no-print{display:none!important}.page{display:none!important}#roteiros{display:block!important}}
+.ic{width:1.15em;height:1.15em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;flex-shrink:0}
+.ic.on{fill:#e74c3c;stroke:#e74c3c}
+.brand .ic{color:var(--green);width:1.1em;height:1.1em}
+.quick b .ic{width:28px;height:28px;color:var(--blue)}
+.bottomnav b .ic{width:22px;height:22px}
+.fav{display:flex;align-items:center;justify-content:center;color:#5b6b7d}.fav .ic{width:20px;height:20px}
+.close{display:inline-flex;align-items:center;justify-content:center}
+.info b .ic{color:var(--blue);margin-right:4px}
+.mpin{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;border:2px solid #fff;box-shadow:0 2px 6px #0005}.mpin .ic{width:16px;height:16px}
+.actions .ic,.secondary .ic,.primary .ic,.wa .ic,.danger .ic{margin-right:2px}
