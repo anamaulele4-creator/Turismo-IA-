@@ -5,20 +5,22 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Tourist AI — Descobre. Explora. Vive.</title>
 <meta name="description" content="Planeia viagens em Moçambique: destinos, alojamento, restaurantes, atividades, mapa e roteiros personalizados.">
-<meta name="theme-color" content="#0878d1">
+<meta name="theme-color" content="#0b2238">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-palm" viewBox="0 0 24 24"><path d="M12 22V11"/><path d="M12 11C10 7 6 6 3 8c3-1 6 0 9 3z"/><path d="M12 11c2-4 6-5 9-3-3-1-6 0-9 3z"/><path d="M12 11c-1-4-4-7-8-7 3 1 6 3 8 7z"/><path d="M12 11c1-4 4-7 8-7-3 1-6 3-8 7z"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol><symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 19V6M3 15h18v4M21 15v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11.5" r="2"/></symbol><symbol id="i-food" viewBox="0 0 24 24"><path d="M6 3v7a2 2 0 0 0 4 0V3M8 12v9M17 21V3c-2 1.5-3 4-3 8h3"/></symbol><symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 15c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2M2 20c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><circle cx="16" cy="6" r="3"/></symbol><symbol id="i-car" viewBox="0 0 24 24"><path d="M5 15l1.5-5h11l1.5 5"/><rect x="3" y="15" width="18" height="4" rx="1"/><circle cx="7" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol><symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></symbol><symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-9-9a4.5 4.5 0 0 1 9-3 4.5 4.5 0 0 1 9 3c-2 4.5-9 9-9 9z"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol><symbol id="i-money" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-lang" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 9h6M12 8v1M10 13c2-1 3-3 3-4M11 10c1 2 2 3 4 3"/></symbol><symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0zM12 18v4"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol><symbol id="i-health" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></symbol><symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol><symbol id="i-up" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 21h16"/></symbol><symbol id="i-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol><symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol><symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></symbol><symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M8 14h8v7H8z"/></symbol><symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></symbol><symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol><symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h8"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/></symbol><symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></symbol><symbol id="i-logout" viewBox="0 0 24 24"><path d="M15 4h4v16h-4M10 16l-4-4 4-4M6 12h11"/></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-palm" viewBox="0 0 24 24"><path d="M12 22V11"/><path d="M12 11C10 7 6 6 3 8c3-1 6 0 9 3z"/><path d="M12 11c2-4 6-5 9-3-3-1-6 0-9 3z"/><path d="M12 11c-1-4-4-7-8-7 3 1 6 3 8 7z"/><path d="M12 11c1-4 4-7 8-7-3 1-6 3-8 7z"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol><symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 19V6M3 15h18v4M21 15v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11.5" r="2"/></symbol><symbol id="i-food" viewBox="0 0 24 24"><path d="M6 3v7a2 2 0 0 0 4 0V3M8 12v9M17 21V3c-2 1.5-3 4-3 8h3"/></symbol><symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 15c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2M2 20c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><circle cx="16" cy="6" r="3"/></symbol><symbol id="i-car" viewBox="0 0 24 24"><path d="M5 15l1.5-5h11l1.5 5"/><rect x="3" y="15" width="18" height="4" rx="1"/><circle cx="7" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol><symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></symbol><symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-9-9a4.5 4.5 0 0 1 9-3 4.5 4.5 0 0 1 9 3c-2 4.5-9 9-9 9z"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol><symbol id="i-money" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-lang" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 9h6M12 8v1M10 13c2-1 3-3 3-4M11 10c1 2 2 3 4 3"/></symbol><symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0zM12 18v4"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol><symbol id="i-health" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></symbol><symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol><symbol id="i-up" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 21h16"/></symbol><symbol id="i-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol><symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol><symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></symbol><symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M8 14h8v7H8z"/></symbol><symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></symbol><symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol><symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h8"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/></symbol><symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></symbol><symbol id="i-logout" viewBox="0 0 24 24"><path d="M15 4h4v16h-4M10 16l-4-4 4-4M6 12h11"/></symbol><symbol id="i-send" viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-8z"/></symbol><symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V3h9l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol><symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 3h6l1-3h5"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol></svg>
 <header class="top"><nav class="nav">
   <div class="brand" data-page="home" style="cursor:pointer"><svg class="ic"><use href="#i-palm"/></svg> Tourist <span>AI</span><small>DESCOBRE · EXPLORA · VIVE</small></div>
   <div class="links">
-    <button data-page="destinos">Destinos</button><button data-page="hoteis">Alojamento</button><button data-page="restaurantes">Restaurantes</button><button data-page="atividades">Atividades</button><button data-page="transportes">Transportes</button><button data-page="mapa">Mapa</button><button data-page="assistente">Assistente</button><button data-page="roteiros">Roteiros</button><button data-page="favoritos">Favoritos</button><button data-page="parceiro">Empresas</button>
+    <button data-page="destinos">Destinos</button><button data-page="hoteis">Alojamento</button><button data-page="restaurantes">Restaurantes</button><button data-page="atividades">Atividades</button><button data-page="guias">Guias</button><button data-page="transportes">Transportes</button><button data-page="mapa">Mapa</button><button data-page="assistente">Assistente</button><button data-page="roteiros">Roteiros</button><button data-page="mensagens">Mensagens <span class="nbadge hidden" data-unread></span></button><button data-page="parceiro">Empresas</button>
   </div>
+  <select class="langsel" aria-label="Idioma" translate="no"><option value="pt">PT</option><option value="en">EN</option><option value="fr">FR</option><option value="es">ES</option></select>
   <button class="primary" id="accountBtn" data-page="conta">Entrar</button>
 </nav></header>
 
@@ -32,18 +34,54 @@
     <p>Praias, ilhas, parques e cidades. Encontra lugares, cria o teu roteiro e fala diretamente com quem te recebe.</p>
     <div class="searchbox">
       <input id="mainSearch" placeholder="Para onde queres ir? Ex.: Tofo, praia, marisco">
-      <select id="mainCategory"><option value="todos">Tudo</option><option value="destino">Destinos</option><option value="hotel">Alojamento</option><option value="restaurante">Restaurantes</option><option value="atividade">Atividades</option><option value="transporte">Transportes</option></select>
+      <select id="mainCategory"><option value="todos">Tudo</option><option value="destino">Destinos</option><option value="hotel">Alojamento</option><option value="restaurante">Restaurantes</option><option value="atividade">Atividades</option><option value="transporte">Transportes</option><option value="guia">Guias</option></select>
       <button class="primary" id="searchBtn">Pesquisar</button>
     </div>
   </div></div>
   <div class="quick">
-    <button data-page="hoteis"><b><svg class="ic"><use href="#i-bed"/></svg></b>Alojamento</button><button data-page="restaurantes"><b><svg class="ic"><use href="#i-food"/></svg></b>Restaurantes</button><button data-page="transportes"><b><svg class="ic"><use href="#i-car"/></svg></b>Transportes</button><button data-page="atividades"><b><svg class="ic"><use href="#i-wave"/></svg></b>Atividades</button><button data-page="mapa"><b><svg class="ic"><use href="#i-map"/></svg></b>Mapa</button><button data-page="assistente"><b><svg class="ic"><use href="#i-chat"/></svg></b>Assistente</button><button data-page="roteiros"><b><svg class="ic"><use href="#i-compass"/></svg></b>Roteiros</button><button data-page="info"><b><svg class="ic"><use href="#i-info"/></svg></b>Info útil</button>
+    <button data-page="hoteis"><b><svg class="ic"><use href="#i-bed"/></svg></b>Alojamento</button><button data-page="restaurantes"><b><svg class="ic"><use href="#i-food"/></svg></b>Restaurantes</button><button data-page="transportes"><b><svg class="ic"><use href="#i-car"/></svg></b>Transportes</button><button data-page="atividades"><b><svg class="ic"><use href="#i-wave"/></svg></b>Atividades</button><button data-page="guias"><b><svg class="ic"><use href="#i-flag"/></svg></b>Guias</button><button data-page="mensagens"><b><svg class="ic"><use href="#i-chat"/></svg></b>Negociar</button><button data-page="mapa"><b><svg class="ic"><use href="#i-map"/></svg></b>Mapa</button><button data-page="assistente"><b><svg class="ic"><use href="#i-chat"/></svg></b>Assistente</button><button data-page="roteiros"><b><svg class="ic"><use href="#i-compass"/></svg></b>Roteiros</button><button data-page="info"><b><svg class="ic"><use href="#i-info"/></svg></b>Info útil</button>
   </div>
   <div class="section-head"><div><h2>Destinos em destaque</h2><p>Inspiração para a tua próxima viagem</p></div><button class="secondary" data-page="destinos">Ver todos</button></div>
   <div class="grid" id="homeDestinations"></div>
   <div class="section-head"><div><h2>Onde ficar e comer</h2><p>Lugares conhecidos para começar. Confirma sempre preços e disponibilidade.</p></div></div>
   <div class="grid" id="homePlaces"></div>
-  <div class="panel" style="margin-top:22px;background:linear-gradient(110deg,#eaf4ff,#fff)"><div class="row"><div><span class="tag">PARCEIROS TOURIST AI</span><h2 style="margin:10px 0 5px">Tens um negócio turístico?</h2><p class="muted">Publica o teu perfil grátis e recebe contactos de viajantes diretamente no WhatsApp.</p></div><button class="primary" data-page="parceiro">Publicar o meu negócio</button></div></div>
+  <div class="panel" style="margin-top:22px;background:linear-gradient(110deg,#eaf4ff,#fff)"><div class="row"><div><span class="tag">PARCEIROS TOURIST AI</span><h2 style="margin:10px 0 5px">Tens um negócio turístico?</h2><p class="muted">Publica o teu perfil grátis e recebe pedidos e negocia preços com viajantes no chat da plataforma.</p></div><button class="primary" data-page="parceiro">Publicar o meu negócio</button></div></div>
+</section>
+
+
+<!-- GUIAS -->
+<section id="guias" class="page">
+  <div class="section-head"><div><span class="eyebrow dark">Guias turísticos</span><h2>Todos os serviços dos guias</h2><p>Escolhe o serviço, pede orçamento e negoceia o preço no chat com guias locais.</p></div></div>
+  <div class="chips" id="svcChips"></div>
+  <div class="field" style="max-width:340px;margin-bottom:16px"><select id="svcPlace"></select></div>
+  <div class="svcgrid" id="svcList"></div>
+  <div class="section-head"><div><h2>Guias parceiros</h2><p>Perfis publicados na Tourist AI.</p></div><button class="secondary" data-page="parceiro">Sou guia</button></div>
+  <div class="grid" id="guideList"></div>
+  <p class="muted small">Valores indicativos e negociáveis. Confirma licença, seguro e condições com o guia antes de pagar.</p>
+</section>
+
+<!-- MENSAGENS / NEGOCIAÇÕES -->
+<section id="mensagens" class="page">
+  <div class="section-head"><div><span class="eyebrow dark">Chat em tempo real</span><h2>Negociações</h2><p>Conversa, faz propostas de preço e fecha o acordo.</p></div><div class="row"><span class="live" id="liveState">A ligar…</span></div></div>
+  <div class="tabs"><button class="tab on" data-mtab="conversas">Conversas</button><button class="tab" data-mtab="pedidos">Mural de pedidos</button></div>
+  <div id="mtab-conversas" class="inboxwrap">
+    <aside class="convlist" id="convList"></aside>
+    <div class="convview" id="convView"><div class="emptychat"><svg class="ic"><use href="#i-chat"/></svg><p>Escolhe uma conversa ou abre um serviço e toca em <b>Negociar no chat</b>.</p></div></div>
+  </div>
+  <div id="mtab-pedidos" class="hidden">
+    <div class="panel"><h3>Publicar um pedido</h3><p class="muted small">Os guias e empresas parceiras veem o teu pedido e respondem com uma proposta.</p>
+      <form id="reqForm" class="formgrid">
+        <div class="field"><label>Serviço *</label><select name="service" id="reqService"></select></div>
+        <div class="field"><label>Destino *</label><select name="place" id="reqPlace"></select></div>
+        <div class="field"><label>Data</label><input name="date" type="date"></div>
+        <div class="field"><label>Pessoas</label><input name="pax" type="number" min="1" value="2"></div>
+        <div class="field"><label>Orçamento total (MT)</label><input name="budget" type="number" min="0" placeholder="Ex.: 5000"></div>
+        <div class="field"><label>Notas</label><input name="notes" maxlength="200" placeholder="Língua, horário, crianças…"></div>
+        <button class="primary">Publicar pedido</button>
+      </form></div>
+    <div class="list" id="reqList"></div>
+    <p class="muted small">Os pedidos ficam visíveis no mural durante 12 horas.</p>
+  </div>
 </section>
 
 <!-- RESULTADOS -->
@@ -138,21 +176,23 @@
     <form id="businessForm" class="formgrid">
       <input type="hidden" name="id">
       <div class="field"><label>Nome comercial *</label><input name="name" required></div>
-      <div class="field"><label>Categoria *</label><select name="category"><option value="hotel">Alojamento</option><option value="restaurante">Restaurante</option><option value="atividade">Atividade / guia</option><option value="transporte">Transporte</option></select></div>
+      <div class="field"><label>Categoria *</label><select name="category"><option value="hotel">Alojamento</option><option value="restaurante">Restaurante</option><option value="guia">Guia turístico</option><option value="atividade">Atividade / passeio</option><option value="transporte">Transporte</option></select></div>
       <div class="field"><label>Cidade / zona *</label><select name="place" id="bizPlace"></select></div>
       <div class="field"><label>WhatsApp *</label><input name="phone" required placeholder="+258 84 000 0000"></div>
       <div class="field"><label>Preço indicativo</label><input name="price" placeholder="Desde 2.500 MT / noite"></div>
       <div class="field"><label>Link da fotografia (opcional)</label><input name="img" type="url" placeholder="https://..."></div>
+      <div class="field hidden" id="bizSvcWrap" style="grid-column:1/-1"><label>Serviços que ofereces</label><div class="checks" id="bizServices"></div></div>
+      <div class="field hidden" id="bizLangWrap"><label>Línguas</label><input name="langs" placeholder="Português, inglês, changana"></div>
       <div class="field" style="grid-column:1/-1"><label>Descrição *</label><textarea name="desc" required maxlength="400"></textarea></div>
       <div class="row"><button class="primary">Publicar</button><button type="button" class="secondary hidden" id="cancelEdit">Cancelar edição</button></div>
     </form></div>
   <div class="panel"><h3>O meu painel</h3>
-    <div class="stats"><div class="stat"><strong id="pListings">0</strong><span>Negócios publicados</span></div><div class="stat"><strong id="pViews">0</strong><span>Visualizações</span></div><div class="stat"><strong id="pLeads">0</strong><span>Contactos WhatsApp</span></div><div class="stat"><strong id="pFavs">0</strong><span>Guardados</span></div></div>
+    <div class="stats"><div class="stat"><strong id="pListings">0</strong><span>Negócios publicados</span></div><div class="stat"><strong id="pViews">0</strong><span>Visualizações</span></div><div class="stat"><strong id="pLeads">0</strong><span>Contactos WhatsApp</span></div><div class="stat"><strong id="pChats">0</strong><span>Negociações</span></div></div>
     <div class="list" id="myListings" style="margin-top:15px"></div>
-    <p class="muted small">Os dados ficam guardados neste dispositivo.</p></div>
+    <p class="muted small">O perfil aparece para os outros viajantes enquanto abres a app pelo menos uma vez a cada 12 horas. As negociações chegam ao separador Mensagens.</p></div>
 </section>
 
-<section id="conta" class="page"><div class="section-head"><div><h2>A minha conta</h2><p>O teu perfil fica guardado neste dispositivo.</p></div></div>
+<section id="conta" class="page"><div class="section-head"><div><h2>A minha conta</h2><p>O teu perfil fica guardado neste dispositivo.</p></div><div class="field" style="min-width:170px"><label>Idioma</label><select class="langsel" translate="no"><option value="pt">Português</option><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select></div></div>
   <div class="panel" id="accountPanel"></div>
   <div class="panel"><h3>Os meus dados</h3><p class="muted">Faz uma cópia de segurança dos teus favoritos, roteiros e negócios, ou passa-os para outro telemóvel.</p>
     <div class="actions"><button class="secondary" id="exportBtn"><svg class="ic"><use href="#i-down"/></svg> Exportar dados</button><label class="secondary" style="cursor:pointer"><svg class="ic"><use href="#i-up"/></svg> Importar<input type="file" id="importFile" accept="application/json" hidden></label><button class="danger" id="wipeBtn">Apagar tudo</button></div></div>
@@ -163,13 +203,14 @@
 <footer class="footer"><strong>Tourist AI</strong><p>Turismo inteligente, Moçambique primeiro.</p><p class="small">Informação indicativa: confirma preços, horários e disponibilidade diretamente com cada fornecedor.</p><p class="small"><a href="#info" style="color:#dbe8f5">Informações úteis</a> · <a href="#parceiro" style="color:#dbe8f5">Para empresas</a></p></footer>
 
 <nav class="bottomnav">
-  <button data-page="home"><b><svg class="ic"><use href="#i-home"/></svg></b>Início</button><button data-page="destinos"><b><svg class="ic"><use href="#i-globe"/></svg></b>Destinos</button><button data-page="mapa"><b><svg class="ic"><use href="#i-map"/></svg></b>Mapa</button><button data-page="assistente"><b><svg class="ic"><use href="#i-chat"/></svg></b>Assistente</button><button data-page="roteiros"><b><svg class="ic"><use href="#i-compass"/></svg></b>Roteiros</button>
+  <button data-page="home"><b><svg class="ic"><use href="#i-home"/></svg></b>Início</button><button data-page="destinos"><b><svg class="ic"><use href="#i-globe"/></svg></b>Destinos</button><button data-page="guias"><b><svg class="ic"><use href="#i-flag"/></svg></b>Guias</button><button data-page="mensagens"><b><svg class="ic"><use href="#i-chat"/></svg></b>Mensagens<span class="nbadge hidden" data-unread></span></button><button data-page="conta"><b><svg class="ic"><use href="#i-user"/></svg></b>Conta</button>
 </nav>
 
 <div class="modal" id="modal"><div class="modalbox" id="modalbox"></div></div>
 <div id="toast" class="toast"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<script src="i18n.js"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>
